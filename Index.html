@@ -1,0 +1,62 @@
+import os, textwrap, json, pathlib
+path='/mnt/data/evora_prototype.html'
+html = r'''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111018">
+<title>EVORA — Your personal space</title>
+<style>
+:root{--bg:#0d0b12;--panel:#17141f;--panel2:#211c2b;--text:#f3eff9;--muted:#a9a1b7;--accent:#b9a0ff;--accent2:#8b77d8;--line:#30283d;--good:#a7d8c5}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#21172f 0,#0d0b12 55%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+.app{max-width:760px;margin:auto;padding:22px 16px 100px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.brand{letter-spacing:.22em;font-weight:800;font-size:14px}.status{color:var(--muted);font-size:12px}.hero{padding:24px 20px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(135deg,#211b2d,#15121c);box-shadow:0 16px 45px #0004}.eyebrow{color:var(--accent);font-size:11px;letter-spacing:.15em;text-transform:uppercase}.hero h1{font-size:28px;margin:9px 0 8px;font-weight:650}.hero p{margin:0;color:var(--muted);line-height:1.5}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}.tile{border:1px solid var(--line);background:var(--panel);border-radius:18px;padding:17px;min-height:128px;color:var(--text);text-align:left;cursor:pointer;transition:.18s}.tile:hover{transform:translateY(-2px);border-color:#66538b}.icon{font-size:22px;margin-bottom:12px}.tile strong{display:block;font-size:14px}.tile span{display:block;color:var(--muted);font-size:12px;margin-top:5px}.section{margin-top:24px}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.sectionhead h2{font-size:14px;margin:0}.small{font-size:12px;color:var(--muted)}.quote{border:1px solid var(--line);background:#15121b;border-radius:16px;padding:16px;color:#c9c1d3;font-size:13px;line-height:1.6}
+.view{display:none;margin-top:20px;border:1px solid var(--line);border-radius:20px;background:var(--panel);padding:18px}.view.active{display:block}.view h2{margin:0 0 14px;font-size:18px}.row{display:flex;gap:8px;margin:10px 0}.input,textarea{width:100%;background:#0f0d15;border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--text);font:inherit;outline:none}.input:focus,textarea:focus{border-color:var(--accent2)}textarea{min-height:120px;resize:vertical}.btn{border:1px solid #55466f;background:#2a2138;color:var(--text);border-radius:12px;padding:11px 14px;cursor:pointer;font-weight:600}.btn.primary{background:var(--accent);color:#17111f;border:0}.btn.ghost{background:transparent}.list{padding:0;list-style:none}.list li{padding:11px 0;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center}.list li:last-child{border:0}.list input{accent-color:var(--accent)}.chatlog{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}.bubble{max-width:90%;padding:11px 13px;border-radius:14px;background:#241e30;color:#e8e1f1;font-size:14px;line-height:1.5}.bubble.me{align-self:flex-end;background:#4b3b70}.foot{position:fixed;bottom:0;left:0;right:0;padding:12px 16px;background:#0d0b12eF;border-top:1px solid var(--line);backdrop-filter:blur(12px);display:flex;justify-content:center}.nav{display:flex;gap:6px;max-width:760px;width:100%;justify-content:space-around}.nav button{background:none;border:0;color:var(--muted);padding:8px 12px;font-size:12px;cursor:pointer}.nav button.active{color:var(--accent)}.moods{display:flex;gap:8px;flex-wrap:wrap}.mood{font-size:24px;background:#211b2b;border:1px solid var(--line);border-radius:12px;padding:10px;cursor:pointer}.mood.selected{border-color:var(--accent);background:#35294a}.toast{color:var(--good);font-size:12px;min-height:18px;margin-top:8px}
+@media(min-width:600px){.app{padding-top:32px}.hero h1{font-size:34px}.grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="brand">✦ EVORA</div><div class="status">YOUR PRIVATE SPACE</div></header>
+<section class="hero"><div class="eyebrow">Wednesday evening · a fresh start</div><h1>Welcome back.</h1><p>You don't have to have it all figured out.<br>Let's take it one step at a time.</p></section>
+<div class="grid">
+<button class="tile" onclick="openView('chat')"><div class="icon">✧</div><strong>Talk to EVORA</strong><span>A companion for anything</span></button>
+<button class="tile" onclick="openView('journal')"><div class="icon">☾</div><strong>My Journal</strong><span>A place for your thoughts</span></button>
+<button class="tile" onclick="openView('tasks')"><div class="icon">◇</div><strong>Today's Tasks</strong><span>One thing at a time</span></button>
+<button class="tile" onclick="openView('mood')"><div class="icon">♡</div><strong>Mood Check-in</strong><span>How are you, really?</span></button>
+<button class="tile" onclick="openView('goals')"><div class="icon">✴</div><strong>My Goals</strong><span>Little steps, big dreams</span></button>
+<button class="tile" onclick="openView('quick')"><div class="icon">＋</div><strong>Quick Add</strong><span>Capture it before it slips</span></button>
+</div>
+<section class="section"><div class="sectionhead"><h2>A little reminder</h2><span class="small">from EVORA</span></div><div class="quote">“You are allowed to grow at your own pace. Rest is part of the journey, too.”</div></section>
+
+<section id="chat" class="view"><h2>✧ Talk to EVORA</h2><div class="small">This prototype chat is a local demo. AI connection can be added later.</div><div class="chatlog" id="chatlog"><div class="bubble">I'm here. What's on your mind?</div></div><div class="row"><input class="input" id="chatinput" placeholder="Tell me anything…"><button class="btn primary" onclick="sendChat()">Send</button></div></section>
+<section id="journal" class="view"><h2>☾ My Journal</h2><textarea id="journaltext" placeholder="Let your thoughts land here…"></textarea><div class="row"><button class="btn primary" onclick="saveJournal()">Save entry</button><span id="journalstatus" class="toast"></span></div><div id="entries" class="small"></div></section>
+<section id="tasks" class="view"><h2>◇ Today's Tasks</h2><div class="row"><input class="input" id="taskinput" placeholder="A small thing to do…"><button class="btn primary" onclick="addTask()">Add</button></div><ul class="list" id="tasklist"></ul></section>
+<section id="mood" class="view"><h2>♡ Mood Check-in</h2><p class="small">No judgment. Just noticing.</p><div class="moods"><button class="mood" onclick="setMood('😊','Good')">😊</button><button class="mood" onclick="setMood('😌','Calm')">😌</button><button class="mood" onclick="setMood('🥹','Tender')">🥹</button><button class="mood" onclick="setMood('😔','Low')">😔</button><button class="mood" onclick="setMood('😵‍💫','Overwhelmed')">😵‍💫</button><button class="mood" onclick="setMood('🔥','Motivated')">🔥</button></div><div id="moodstatus" class="toast"></div></section>
+<section id="goals" class="view"><h2>✴ My Goals</h2><div class="row"><input class="input" id="goalinput" placeholder="Something you want to move toward…"><button class="btn primary" onclick="addGoal()">Add</button></div><ul class="list" id="goallist"></ul></section>
+<section id="quick" class="view"><h2>＋ Quick Add</h2><input class="input" id="quickinput" placeholder="A task, thought, or reminder…"><div class="row"><button class="btn primary" onclick="quickAdd()">Save as task</button><button class="btn ghost" onclick="quickJournal()">Save as journal</button></div><div id="quickstatus" class="toast"></div></section>
+</div>
+<footer class="foot"><nav class="nav"><button onclick="scrollHome()">⌂ Home</button><button onclick="openView('chat')">✧ Chat</button><button onclick="openView('journal')">☾ Journal</button><button onclick="openView('tasks')">◇ Tasks</button></nav></footer>
+<script>
+const $=id=>document.getElementById(id);
+function openView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(id).classList.add('active');$(id).scrollIntoView({behavior:'smooth',block:'start'});}
+function scrollHome(){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));window.scrollTo({top:0,behavior:'smooth'});}
+function get(k){try{return JSON.parse(localStorage.getItem('evora_'+k)||'[]')}catch{return[]}}
+function put(k,v){localStorage.setItem('evora_'+k,JSON.stringify(v))}
+function addTask(){let x=$('taskinput').value.trim();if(!x)return;let a=get('tasks');a.push({text:x,done:false});put('tasks',a);$('taskinput').value='';renderTasks()}
+function renderTasks(){$('tasklist').innerHTML='';get('tasks').forEach((t,i)=>{let li=document.createElement('li'),cb=document.createElement('input'),sp=document.createElement('span');cb.type='checkbox';cb.checked=t.done;cb.onchange=()=>{let a=get('tasks');a[i].done=cb.checked;put('tasks',a);renderTasks()};sp.textContent=t.text;sp.style.textDecoration=t.done?'line-through':'none';li.append(cb,sp);$('tasklist').append(li)})}
+function saveJournal(){let x=$('journaltext').value.trim();if(!x)return;let a=get('journal');a.unshift({date:new Date().toLocaleString(),text:x});put('journal',a);$('journaltext').value='';$('journalstatus').textContent='Saved privately on this device.';renderEntries()}
+function renderEntries(){$('entries').innerHTML=get('journal').slice(0,5).map(e=>`<p><b>${e.date}</b><br>${escapeHtml(e.text)}</p>`).join('')}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function addGoal(){let x=$('goalinput').value.trim();if(!x)return;let a=get('goals');a.push({text:x,done:false});put('goals',a);$('goalinput').value='';renderGoals()}
+function renderGoals(){$('goallist').innerHTML='';get('goals').forEach((g,i)=>{let li=document.createElement('li'),cb=document.createElement('input'),sp=doc
+  ument.createElement('span');cb.type='checkbox';cb.checked=g.done;cb.onchange=()=>{let a=get('goals');a[i].done=cb.checked;put('goals',a);renderGoals()};sp.textContent=g.text;sp.style.textDecoration=g.done?'line-through':'none';li.append(cb,sp);$('goallist').append(li)})}
+function setMood(emoji,label){let a=get('moods');a.unshift({date:new Date().toLocaleString(),emoji,label});put('moods',a);document.querySelectorAll('.mood').forEach(b=>b.classList.remove('selected'));event.currentTarget.classList.add('selected');$('moodstatus').textContent='Check-in saved on this device. Thank you for being honest.'}
+function quickAdd(){let x=$('quickinput').value.trim();if(!x)return;$ ('taskinput').value=x;addTask();$('quickinput').value='';$('quickstatus').textContent='Added to tasks.'}
+function quickJournal(){let x=$('quickinput').value.trim();if(!x)return;$ ('journaltext').value=x;saveJournal();$('quickinput').value='';$('quickstatus').textContent='Added to journal.'}
+function sendChat(){let x=$('chatinput').value.trim();if(!x)return;let b=document.createElement('div');b.className='bubble me';b.textContent=x;$('chatlog').append(b);$('chatinput').value='';let r=document.createElement('div');r.className='bubble';r.textContent='This is the prototype chat for now. Once we connect an AI service, I’ll be able to respond to you here.';$('chatlog').append(r)}
+renderTasks();renderGoals();renderEntries();
+</script>
+</body></html>'''
+open(path,'w',encoding='utf-8').write(html)
+print(path, os.path.getsize(path))
