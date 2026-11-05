@@ -57,6 +57,7 @@ function quickJournal(){let x=$('quickinput').value.trim();if(!x)return;$ ('jour
 function sendChat(){let x=$('chatinput').value.trim();if(!x)return;let b=document.createElement('div');b.className='bubble me';b.textContent=x;$('chatlog').append(b);$('chatinput').value='';let r=document.createElement('div');r.className='bubble';r.textContent='This is the prototype chat for now. Once we connect an AI service, I’ll be able to respond to you here.';$('chatlog').append(r)}
 renderTasks();renderGoals();renderEntries();
 </script>
+  ai section 
   div class equals AI dash chat, H2 EVORA AI, P your personal AI companion is coming soon, heart emoji, then close div
 </body></html>'''
 open(path,'w',encoding='utf-8').write(html)
